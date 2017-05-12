@@ -18,5 +18,14 @@ apply:
   -var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' \
   -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}'
 
+plan_destroy:
+	terraform plan -destroy \
+  -var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' \
+  -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}'
 
-.PHONY: deploy-stage
+destroy:
+	terraform destroy \
+  -var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' \
+  -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}'
+
+.PHONY: *
