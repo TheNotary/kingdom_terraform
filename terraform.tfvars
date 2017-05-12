@@ -10,9 +10,11 @@
 #}
 
 
-#ubuntu_amis = [ "us-east-1": "ami-cb4b94dd", "us-west-1": "ami-9899c7f8" ]
 #ubuntu_amis = { "us-east-1": "ami-cb4b94dd", "us-west-1": "ami-9899c7f8" }
-ubuntu_amis = { "us-east-1" = "ami-cb4b94dd", "us-west-1" = "ami-9899c7f8" }
+ubuntu_amis = {
+  "us-east-1" = "ami-cb4b94dd",
+  "us-west-1" = "ami-9899c7f8"
+}
 
 #variable "ami" {
 #  default = "ami-9899c7f8"
