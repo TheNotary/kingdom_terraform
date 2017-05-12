@@ -3,7 +3,8 @@ variable "region" {
   default = "us-west-1"
 }
 
-variable "key_path" {}
+variable "pub_key_path" {}
+variable "priv_key_path" {}
 variable "access_key" {}
 variable "secret_key" {}
 variable "ubuntu_amis" {type = "map"}
@@ -19,7 +20,7 @@ provider "aws" {
 # Setup a key that can be used to ssh into EC2 instances
 resource "aws_key_pair" "personal-aws" {
   key_name   = "personal-aws_rsa"
-  public_key = "${file(var.key_path)}"
+  public_key = "${file(var.pub_key_path)}"
 }
 
 # Setup a security group that is attached to an EC2 instance, allowing inboud SSH connections
@@ -78,7 +79,15 @@ resource "aws_instance" "personal-site" {
   key_name = "${aws_key_pair.personal-aws.id}"
 
   security_groups = ["${aws_security_group.wide-open.name}"]
+
+  # This info allows terraform to connect to the server and provision it
   connection {
     user = "admin"
+    private_key = "${file(var.priv_key_path)}"
+  }
+
+  # this allows terraform to run commands after the EC2 instance boots up
+  provisioner "remote-exec" {
+    script = "personal-site/provision.sh"
   }
 }
