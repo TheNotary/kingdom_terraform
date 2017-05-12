@@ -21,3 +21,5 @@ ubuntu_amis = {
 #}
 
 ami = "ami-9899c7f8"
+
+key_path = "/home/john/dev/hobby/kingdom_terraform/keys/personal-aws_rsa.pub"
