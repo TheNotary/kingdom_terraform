@@ -4,7 +4,9 @@ This repo allows me to spin up my tech on AWS without having to waste a bunch of
 
 ## Usage
 
-Required ENV Variables:
+Before you can get started, you need to create an iam user and give it permissions to do the things you want terraform to do (I just gave my Administrative Access so I don't need to update it again).
+
+###### Required ENV Variables:
 
 (.bashrc or w/e loads when your console loads)
 ```
