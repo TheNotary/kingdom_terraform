@@ -85,6 +85,16 @@ resource "aws_instance" "personal-site" {
     private_key = "${file(var.priv_key_path)}"
   }
 
+  provisioner "file" {
+    source      = "keys/default-dokku_rsa"
+    destination = "/home/admin/.ssh/default-dokku_rsa"
+  }
+
+  provisioner "file" {
+    source      = "keys/default-dokku_rsa.pub"
+    destination = "/home/admin/.ssh/default-dokku_rsa.pub"
+  }
+
   # this allows terraform to run commands after the EC2 instance boots up
   provisioner "remote-exec" {
     script = "personal-site/provision.sh"

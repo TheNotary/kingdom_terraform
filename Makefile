@@ -2,7 +2,9 @@
 #state_file=${PWD##*/}-state/terraform.tfstate
 
 init:
-	mkdir -p keys/ && ssh-keygen -t RSA -b 4096 -N '' -f `pwd`/keys/personal-aws_rsa
+	mkdir -p keys/ && \
+  ssh-keygen -t RSA -b 4096 -N '' -f `pwd`/keys/personal-aws_rsa && \
+  ssh-keygen -t RSA -b 4096 -N '' -f `pwd`/keys/default-dokku_rsa
 
 plan:
 	terraform plan \
