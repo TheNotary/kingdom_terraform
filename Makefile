@@ -26,6 +26,7 @@ plan_destroy:
 destroy:
 	terraform destroy \
   -var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' \
-  -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}'
+  -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}' \
+  -target=aws_instance.personal-site # this will only destory the EC2 instance part of things, not the other configs surrounding it
 
 .PHONY: *
