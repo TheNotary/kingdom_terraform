@@ -30,3 +30,5 @@ You might need to login to the aws console and search the correct box just to si
 
 - The starter project: http://grange74.github.io/blog/2015/05/20/terraform-hello-world-on-aws/
 - Variabls and how they are annoying:  https://www.terraform.io/intro/getting-started/variables.html
+- use `terraform import aws_instance.web i-12345678` to go in reverse, take configs from amazon and build at `.tf` file from them!?!
+
