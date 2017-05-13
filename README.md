@@ -4,7 +4,7 @@ This repo allows me to spin up my tech on AWS without having to waste a bunch of
 
 ## Usage
 
-Before you can get started, you need to create an iam user and give it permissions to do the things you want terraform to do (I just gave my Administrative Access so I don't need to update it again).
+Before you can get started, you need to hop up to the cloud (aws.amazon.com) and create an iam user and give it permissions to do the things you want terraform to do (I just gave my Administrative Access so I don't need to update it again).
 
 ###### Required ENV Variables:
 
@@ -15,7 +15,24 @@ export HOBBY_AWS_ACCESS_KEY_ID='<insert from amazon>'
 export HOBBY_AWS_SECRET_ACCESS_KEY='<insert from amazon>'
 ```
 
-There's a `Makefile` that set's up the command `make plan`.  By this mechanism, secret variables can be set in a somewhat simple way.  Considering using `TF_VAR_access_key` as an env which would make the makefile un-needed with the current state of the repo.  May still need further secrets though.
+There's a `Makefile` that provides various commands for working with this repo.
+
+```
+# Run this command once to initialize all your keys for the first time.
+$ make init
+
+# Run this command to test the config file and see what terraform will do if
+# it's actually activiated.
+$ make plan
+
+# Run this command to actually activate terraform and have it apply your
+# infrastructure to the cloud.
+$  make apply
+
+# Run this command to destory all the infrastructure.  It's set to target just
+# the EC2 instance though.
+$ make destory
+```
 
 
 ## Notes
