@@ -12,6 +12,19 @@ You need this alias on your local dev machine:
 alias dokku-personal='ssh -t dokku@dokku.personal.dev'
 ```
 
+(`.ssh/config`)
+```
+Host dokku.personal.dev
+HostName personal.dev
+User admin
+#below is somewhat unsecure, but that's life
+StrictHostKeyChecking no
+UserKnownHostsFile /dev/null
+LogLevel QUIET
+IdentityFile ~/dev/hobby/kingdom_terraform/keys/default-dokku_rsa
+IdentitiesOnly=yes
+```
+
 
 ## Deploying Your App
 
