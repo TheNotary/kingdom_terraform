@@ -61,7 +61,6 @@ resource "aws_security_group" "wide-open" {
     to_port         = 0
     protocol        = "-1"
     cidr_blocks     = ["0.0.0.0/0"]
-    # prefix_list_ids = ["pl-12c4e678"]
   }
 
 }
@@ -89,5 +88,10 @@ resource "aws_instance" "personal-site" {
   # this allows terraform to run commands after the EC2 instance boots up
   provisioner "remote-exec" {
     script = "personal-site/provision.sh"
+  }
+
+  # This will update your /etc/hosts file so you don't have to waste cash on a static ip for no good reason
+  provisioner "local-exec" {
+    command = "./common/update_hosts.sh personal.dev ${aws_instance.personal-site.public_ip}"
   }
 }
