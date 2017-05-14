@@ -1,4 +1,4 @@
-echo -e "Personal Site Server\!\nIf you spot a vuln, please leave a note here :)\n" | sudo tee /etc/motd > /dev/null
+printf "Personal Site Server\!\nIf you spot a vuln, please leave a note here :)\n" | sudo tee /etc/motd > /dev/null
 
 ###############
 # Setup Dokku #
@@ -14,3 +14,9 @@ echo "dokku dokku/key_file string /home/admin/.ssh/default-dokku_rsa.pub" | sudo
 wget https://raw.githubusercontent.com/dokku/dokku/v0.9.4/bootstrap.sh
 sudo DOKKU_TAG=v0.9.4 bash bootstrap.sh
 
+
+# Install the postgresql plugin for dokku
+sudo dokku plugin:install https://github.com/dokku/dokku-postgres.git postgres
+
+# Adds the ssh key for the dokku user because there seems to be a bug in dokku
+#sudo sshcommand acl-add dokku descr /home/admin/.ssh/default-dokku_rsa.pub

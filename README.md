@@ -43,6 +43,11 @@ To choose the AMI, you need to search for a debian box in the desired region:
 You might need to login to the aws console and search the correct box just to sign an agreement, not sure.
 
 
+# Next Steps
+
+When you're all done here and have successfully created a personal-site server on the cloud (it won't look like much when you navigate there, so don't worry) you should head on to the [dokku docs](DOCS/dokku.md) to push an actual app to your dokku server to have it deployed.
+
+
 ## References
 
 - The starter project: http://grange74.github.io/blog/2015/05/20/terraform-hello-world-on-aws/
