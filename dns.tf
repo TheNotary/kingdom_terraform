@@ -3,14 +3,14 @@ variable "dns_name_prefix" {
 }
 
 
-resource "aws_route53_zone" "personal_dev" {
+resource "aws_route53_zone" "personal-site" {
   provider = "aws"
   name = "personal.dev"
 }
 
 
-resource "aws_route53_record" "www" {
-  zone_id = "${aws_route53_zone.personal_dev.zone_id}"
+resource "aws_route53_record" "personal-site-www" {
+  zone_id = "${aws_route53_zone.personal-site.zone_id}"
   name    = "www.personal.dev"
   type    = "A"
   ttl     = "300"
