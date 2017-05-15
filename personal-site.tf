@@ -11,7 +11,8 @@ variable "ubuntu_amis" {type = "map"}
 variable "ami" {}
 
 # Setup terraform to work with amazon aws with the appropriate user/ region combo
-provider "aws" {
+provider "aws" "prod" {
+  #alias = "prod"
   access_key = "${var.access_key}"
   secret_key = "${var.secret_key}"
   region = "${var.region}"
