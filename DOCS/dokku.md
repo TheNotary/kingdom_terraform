@@ -1,6 +1,8 @@
 # Dokku
 
-Dokku is a self-hosted, push-to-deploy, platform-as-a-service (PaaS) bash system that allows web developers the ease of deployment that heroku provides, without any extrodinary scalability or cost.  Dokku is a container bases solution, so if you're excited about docker and rkt, you'll be quite excited about this... sort of... docker framework for building pipelines for modern applications.  This terraform repo is configured to setup a base debian AMI with dokku so that you will be able to spin up a platform in the `make apply` step, and then thereafter deploy an app onto the server with a simple `git push production master` command, just like how heroku works (but all thrifty-like).
+Dokku is a self-hosted, push-to-deploy, platform-as-a-service (PaaS) bash system that allows web developers the ease of deployment that heroku provides, without any extrodinary scalability or cost.  Dokku is a container bases solution, so if you're excited about docker and rkt, you'll be quite excited about this... sort of... docker framework for building pipelines for modern applications.
+
+This terraform repo is configured to setup a base debian AMI with dokku so that you will be able to spin up a platform in the `make apply` step, and then thereafter deploy an app onto the server with a simple `git push production master` command, just like how heroku works (but all thrifty-like).
 
 ###### Overview
 
@@ -8,7 +10,6 @@ Dokku is a self-hosted, push-to-deploy, platform-as-a-service (PaaS) bash system
 1. Push your app (eg `git push dokku-personal master`)
 1. Create a database container and a database for you app and link your app with the database container
 1. Navigate to your app... it's on the web!!!  On AWS!!!  You can have a dozen apps deployed like this at no extra charge!!!
-
 
 
 ## Required Setup
@@ -56,7 +57,7 @@ $  git remote add dokku-personal dokku.personal.dev:/app_name
 ... Lots of mostly happy output ...
 ```
 
-Next, I want you to, just look over the steps it took for terraform to install this thing (TODO:  link to provision script section).  There's a bit at the bottom where a postgresql plugin is installed.  Thats what enables our dokku server the ability to create database containers with which our app can store persistant data.  We need to run a couple follow up commands to put our database right for our app.
+Next, I want you to, just look over the steps it took for terraform to [install](/personal-site/provision.sh#L7-L19) this thing.  There's a bit at the bottom where a postgresql plugin is installed.  That's what enables our dokku server the ability to create database containers with which our app can store persistant data.  We need to run a couple follow up commands to put our database right for our app.
 
 ```
 dokku-personal postgres:create stock_chart_db
