@@ -1,20 +1,33 @@
+variable "personal_site_domain" {}
 variable "dns_name_prefix" {
   default = ""  # Could be "dev." or "stage." or something else
 }
 
 
-resource "aws_route53_zone" "personal-site" {
+resource "aws_route53_zone" "personal_site" {
   provider = "aws"
-  name = "personal.dev"
+  name = "${var.personal_site_domain}"           # personal.dev
 }
 
 
-resource "aws_route53_record" "personal-site-www" {
-  zone_id = "${aws_route53_zone.personal-site.zone_id}"
-  name    = "www.personal.dev"
+# 'A' record
+resource "aws_route53_record" "personal_site_www" {
+  zone_id = "${aws_route53_zone.personal_site.zone_id}"
+  name    = "www.${var.personal_site_domain}"
   type    = "A"
   ttl     = "300"
   records = ["127.0.0.1"]
+}
+
+
+# 'CNAME' record
+# For some reason, this must be manually deleted...
+resource "aws_route53_record" "personal_site_cname" {
+  zone_id = "${aws_route53_zone.personal_site.zone_id}"
+  name    = "@"
+  type    = "CNAME"
+  ttl     = "5"
+  records = ["initialfantasy.herokuapp.com"]
 }
 
 

@@ -24,3 +24,8 @@ ami = "ami-9899c7f8"
 
 pub_key_path = "keys/personal-aws_rsa.pub"
 priv_key_path = "keys/personal-aws_rsa"
+
+
+# You can set your domain name to your personal site here or via the env
+# variable TF_VAR_personal_site_domain
+#personal_site_domain = "personal.dev"

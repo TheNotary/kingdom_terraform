@@ -35,7 +35,9 @@ destroy_dns:
 	terraform destroy \
   -var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' \
   -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}' \
-  -target=aws_route53_zone.personal-site \
-  -target=aws_route53_records.personal-site-www
+  -target=aws_route53_record.personal_site_cname \
+  -target=aws_route53_record.personal_site_www
+
+  #-target=aws_route53_zone.personal_site
 
 .PHONY: *
