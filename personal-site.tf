@@ -106,3 +106,8 @@ resource "aws_instance" "personal-site" {
     command = "./common/update_hosts.sh personal.dev ${aws_instance.personal-site.public_ip}"
   }
 }
+
+
+resource "aws_eip" "personal-site" {
+  instance = "${aws_instance.personal-site.id}"
+}
