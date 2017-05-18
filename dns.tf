@@ -17,7 +17,7 @@ resource "aws_route53_record" "personal_site_a_me" {
   type    = "A"
   name    = "me.${var.personal_site_domain}"
   records = ["127.0.0.1"]
-  zone_id = "${aws_route53_zone.personal_site.zone_id}"
+  zone_id = "${var.route53_zone_id}"
   ttl     = "300"
 }
 
@@ -25,7 +25,7 @@ resource "aws_route53_record" "personal_site_cname_dev" {
   type    = "CNAME"
   name    = "dev"
   records = ["initialfantasy.herokuapp.com"]
-  zone_id = "${aws_route53_zone.personal_site.zone_id}"
+  zone_id = "${var.route53_zone_id}"
   ttl     = "5"
 }
 

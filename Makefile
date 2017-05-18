@@ -7,7 +7,7 @@ init:
   ssh-keygen -t RSA -b 4096 -N '' -f `pwd`/keys/default-dokku_rsa
 
 plan:
-	terraform plan \
+	@terraform plan \
   -var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' \
   -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}'
 
@@ -16,27 +16,26 @@ plan:
   #-var-file=blah -state=blah -target=aws_instance.www-alpha
 
 apply:
-	terraform apply \
+	@terraform apply \
   -var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' \
   -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}'
 
 plan_destroy:
-	terraform plan -destroy \
+	@terraform plan -destroy \
   -var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' \
   -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}'
 
 destroy:
-	terraform destroy \
+	@terraform destroy \
   -var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' \
-  -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}' \
-  -target=aws_instance.personal-site # this will only destory the EC2 instance part of things, not the other configs surrounding it
+  -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}'
+
+  #-target=aws_instance.personal-site # this will only destory the EC2 instance part of things, not the other configs surrounding it
 
 destroy_dns:
-	terraform destroy \
+	@terraform destroy \
   -var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' \
-  -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}' \
-  -target=aws_route53_record.personal_site_cname \
-  -target=aws_route53_record.personal_site_www
+  -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}'
 
   #-target=aws_route53_zone.personal_site
 
