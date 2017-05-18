@@ -19,14 +19,14 @@ provider "aws" "prod" {
 }
 
 # Setup a key that can be used to ssh into EC2 instances
-resource "aws_key_pair" "personal-aws" {
+resource "aws_key_pair" "personal_site" {
   key_name   = "personal-aws_rsa"
   public_key = "${file(var.pub_key_path)}"
 }
 
 # Setup a security group that is attached to an EC2 instance, allowing inboud SSH connections
-resource "aws_security_group" "wide-open" {
-  name = "wide-open"
+resource "aws_security_group" "wide_open" {
+  name = "wide_open"
   description = "Allows SSH connections in from any IP address"
 
   # SSH
@@ -67,18 +67,18 @@ resource "aws_security_group" "wide-open" {
 }
 
 
-# Spins up an actual EC2 Instance, it's terraform id is 'personal-site'
-resource "aws_instance" "personal-site" {
+# Spins up an actual EC2 Instance, it's terraform id is 'personal_site'
+resource "aws_instance" "personal_site" {
   tags = {
-    Name = "personal-site" # set's the label in aws console
+    Name = "personal_site" # set's the label in aws console
     Description = "Handles the logic involved in my personal website."
   }
 
   ami = "${lookup(var.ubuntu_amis, var.region)}"
   instance_type = "t2.nano"
-  key_name = "${aws_key_pair.personal-aws.id}"
+  key_name = "${aws_key_pair.personal_site.id}"
 
-  security_groups = ["${aws_security_group.wide-open.name}"]
+  security_groups = ["${aws_security_group.wide_open.name}"]
 
   # This info allows terraform to connect to the server and provision it
   connection {
@@ -98,16 +98,16 @@ resource "aws_instance" "personal-site" {
 
   # this allows terraform to run commands after the EC2 instance boots up
   provisioner "remote-exec" {
-    script = "personal-site/provision.sh"
+    script = "personal_site/provision.sh"
   }
 
   # This will update your /etc/hosts file so you don't have to waste cash on a static ip for no good reason
   provisioner "local-exec" {
-    command = "./common/update_hosts.sh personal.dev ${aws_instance.personal-site.public_ip}"
+    command = "./common/update_hosts.sh personal.dev ${aws_instance.personal_site.public_ip}"
   }
 }
 
 
-resource "aws_eip" "personal-site" {
-  instance = "${aws_instance.personal-site.id}"
+resource "aws_eip" "personal_site" {
+  instance = "${aws_instance.personal_site.id}"
 }

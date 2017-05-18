@@ -45,7 +45,7 @@ You might need to login to the aws console and search the correct box just to si
 
 # Next Steps
 
-When you're all done here and have successfully created a personal-site server on the cloud (it won't look like much when you navigate there, so don't worry) you should head on to the [dokku docs](DOCS/dokku.md) to push an actual app to your dokku server to have it deployed.
+When you're all done here and have successfully created a personal_site server on the cloud (it won't look like much when you navigate there, so don't worry) you should head on to the [dokku docs](DOCS/dokku.md) to push an actual app to your dokku server to have it deployed.
 
 
 ## References

@@ -57,7 +57,7 @@ $  git remote add dokku-personal dokku.personal.dev:/app_name
 ... Lots of mostly happy output ...
 ```
 
-Next, I want you to, just look over the steps it took for terraform to [install](/personal-site/provision.sh#L7-L19) this thing.  There's a bit at the bottom where a postgresql plugin is installed.  That's what enables our dokku server the ability to create database containers with which our app can store persistant data.  We need to run a couple follow up commands to put our database right for our app.
+Next, I want you to, just look over the steps it took for terraform to [install](/personal_site/provision.sh#L7-L19) this thing.  There's a bit at the bottom where a postgresql plugin is installed.  That's what enables our dokku server the ability to create database containers with which our app can store persistant data.  We need to run a couple follow up commands to put our database right for our app.
 
 ```
 dokku-personal postgres:create stock_chart_db
