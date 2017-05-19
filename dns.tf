@@ -16,15 +16,15 @@ variable "route53_zone_id" {}
 resource "aws_route53_record" "personal_site_a_me" {
   type    = "A"
   name    = "me.${var.personal_site_domain}"
-  records = ["127.0.0.1"]
+  records = ["${aws_eip.personal_site.public_ip}"]
   zone_id = "${var.route53_zone_id}"
   ttl     = "300"
 }
 
-resource "aws_route53_record" "personal_site_cname_dev" {
-  type    = "CNAME"
-  name    = "dev"
-  records = ["initialfantasy.herokuapp.com"]
+resource "aws_route53_record" "personal_site_a_dev" {
+  type    = "A"
+  name    = "dev.${var.personal_site_domain}"
+  records = ["${aws_eip.personal_site.public_ip}"]
   zone_id = "${var.route53_zone_id}"
   ttl     = "5"
 }
