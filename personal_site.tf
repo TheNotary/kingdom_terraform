@@ -100,14 +100,13 @@ resource "aws_instance" "personal_site" {
   provisioner "remote-exec" {
     script = "personal_site/provision.sh"
   }
-
-  # This will update your /etc/hosts file so you don't have to waste cash on a static ip for no good reason
-  provisioner "local-exec" {
-    command = "./common/update_hosts.sh personal.dev ${aws_instance.personal_site.public_ip}"
-  }
 }
 
 
 resource "aws_eip" "personal_site" {
   instance = "${aws_instance.personal_site.id}"
+  # This will update your /etc/hosts file so you don't have to waste cash on a static ip for no good reason
+  provisioner "local-exec" {
+    command = "./common/update_hosts.sh personal.dev ${aws_eip.personal_site.public_ip}"
+  }
 }
