@@ -124,6 +124,11 @@ resource "aws_instance" "personal_site" {
   }
 
   provisioner "file" {
+    source = "common/change_hostname.sh"
+    destination = "/home/admin/scripts/change_hostname.sh"
+  }
+
+  provisioner "file" {
     source = "personal_site/provision.sh"
     destination = "/home/admin/scripts/provision.sh"
   }
@@ -133,6 +138,8 @@ resource "aws_instance" "personal_site" {
     inline = [
       "chmod 0600 /home/admin/.ssh/*_rsa",
       "chmod 0755 /home/admin/scripts/provision.sh",
+      "chmod 0755 /home/admin/scripts/change_hostname.sh",
+      "sudo bash -l /home/admin/scripts/change_hostname.sh ${var.personal_site_domain}",
       "bash -l /home/admin/scripts/provision.sh ${var.personal_site_domain}"
     ]
   }
