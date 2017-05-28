@@ -118,15 +118,22 @@ resource "aws_instance" "personal_site" {
     destination = "/home/admin/.ssh/default-dokku_rsa.pub"
   }
 
-
   # this allows terraform to run commands after the EC2 instance boots up
+  provisioner "remote-exec" {
+    inline = "mkdir /home/admin/scripts"
+  }
+
   provisioner "file" {
     source = "personal_site/provision.sh"
     destination = "/home/admin/scripts/provision.sh"
   }
 
+  # Here's where we have terraform actually setup the box for us
   provisioner "remote-exec" {
-    inline = "./home/admin/scripts/provision.sh ${var.personal_site_domain}"
+    inline = [
+      "chmod 0600 /home/admin/.ssh/*_rsa",
+      ". /home/admin/scripts/provision.sh ${var.personal_site_domain}"
+    ]
   }
 
 }
