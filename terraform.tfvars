@@ -20,6 +20,7 @@ ubuntu_amis = {
 #  default = "ami-9899c7f8"
 #}
 
+#region = "us-west-1"
 ami = "ami-9899c7f8"
 
 pub_key_path = "keys/personal-aws_rsa.pub"

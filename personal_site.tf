@@ -132,7 +132,8 @@ resource "aws_instance" "personal_site" {
   provisioner "remote-exec" {
     inline = [
       "chmod 0600 /home/admin/.ssh/*_rsa",
-      ". /home/admin/scripts/provision.sh ${var.personal_site_domain}"
+      "chmod 0755 /home/admin/scripts/provision.sh",
+      "bash -l /home/admin/scripts/provision.sh ${var.personal_site_domain}"
     ]
   }
 
