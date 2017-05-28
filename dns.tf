@@ -29,6 +29,14 @@ resource "aws_route53_record" "personal_site_a_dev" {
   ttl     = "5"
 }
 
+resource "aws_route53_record" "personal_site_a_coms" {
+  type    = "A"
+  name    = "coms.${var.personal_site_domain}"
+  records = ["${aws_eip.personal_site.public_ip}"]
+  zone_id = "${var.route53_zone_id}"
+  ttl     = "5"
+}
+
 # You can push your app to this subdomain, and config your ssh to
 # use the user 'dokku'
 resource "aws_route53_record" "personal_site_a_dokku" {
