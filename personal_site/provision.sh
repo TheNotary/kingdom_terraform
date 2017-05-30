@@ -66,11 +66,9 @@ sudo dokku plugin:install https://github.com/dokku/dokku-mysql.git mysql
 # Deploy Apps #
 ###############
 
-## xpd3
-app_name=xpd3
-dokku apps:create ${app_name}
-dokku config:set ${app_name} MYSQL_DATABASE_SCHEME=mysql2
-dokku mysql:create ${app_name}_db
-dokku mysql:link ${app_name}_db ${app_name}
-
-#
+# Make Server Homey
+cd ~
+git clone https://github.com/TheNotary/dotfiles
+cd dotfiles
+./make.sh
+echo "bash_display_style=server" >> ~/.this_machine

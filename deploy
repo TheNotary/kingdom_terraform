@@ -37,24 +37,24 @@ eval "${cmd}"
 
 # Install this to /etc/bash_completion.d/deploy to enable tab completion
 
-_deploy()
-{
-  local cur prev opts
-  COMPREPLY=()
-  cur="${COMP_WORDS[COMP_CWORD]}"
-  prev="${COMP_WORDS[COMP_CWORD-1]}"
-  opts="--help --verbose --version"
-
-
-  if [[ ${COMP_CWORD} == 1 ]] ; then
-    COMPREPLY=( $(compgen -W "dev stg prd" -- ${cur}) )
-    return 0
-  fi
-
-  if [[ ${COMP_CWORD} == 2 ]] ; then
-    COMPREPLY=( $(compgen -W "plan apply destroy state" -- ${cur}) )
-    return 0
-  fi
-}
-complete -F _deploy deploy
+# _deploy()
+# {
+#   local cur prev opts
+#   COMPREPLY=()
+#   cur="${COMP_WORDS[COMP_CWORD]}"
+#   prev="${COMP_WORDS[COMP_CWORD-1]}"
+#   opts="--help --verbose --version"
+#
+#
+#   if [[ ${COMP_CWORD} == 1 ]] ; then
+#     COMPREPLY=( $(compgen -W "dev stg prd" -- ${cur}) )
+#     return 0
+#   fi
+#
+#   if [[ ${COMP_CWORD} == 2 ]] ; then
+#     COMPREPLY=( $(compgen -W "plan apply destroy state" -- ${cur}) )
+#     return 0
+#   fi
+# }
+# complete -F _deploy deploy
 

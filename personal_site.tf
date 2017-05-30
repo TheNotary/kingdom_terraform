@@ -129,8 +129,18 @@ resource "aws_instance" "personal_site" {
   }
 
   provisioner "file" {
+    source = "personal_site/ssh/config"
+    destination = "/home/admin/.ssh/config"
+  }
+
+  provisioner "file" {
     source = "personal_site/provision.sh"
     destination = "/home/admin/scripts/provision.sh"
+  }
+
+  provisioner "file" {
+    source = "personal_site/deploy_rails_app.sh"
+    destination = "/home/admin/scripts/deploy_rails_app.sh"
   }
 
   # Here's where we have terraform actually setup the box for us
@@ -139,18 +149,19 @@ resource "aws_instance" "personal_site" {
       "chmod 0600 /home/admin/.ssh/*_rsa",
       "chmod 0755 /home/admin/scripts/provision.sh",
       "chmod 0755 /home/admin/scripts/change_hostname.sh",
+
       "sudo bash -l /home/admin/scripts/change_hostname.sh ${var.personal_site_domain}",
-      "bash -l /home/admin/scripts/provision.sh ${var.personal_site_domain}"
+      "bash -l /home/admin/scripts/provision.sh ${var.personal_site_domain}",
+      "bash /home/admin/scripts/deploy_rails_app.sh ${var.personal_site_domain} email-smtp.us-west-2.amazonaws.com ${aws_iam_user.eff_fab.id} ${aws_iam_access_key.eff_fab.ses_smtp_password} ${var.region} ${aws_iam_access_key.eff_fab.id} ${aws_iam_access_key.eff_fab.secret} ${aws_s3_bucket.eff_fab.id}"
     ]
   }
 
 }
 
-
-resource "aws_eip" "personal_site" {
-  instance = "${aws_instance.personal_site.id}"
-  # This will update your /etc/hosts file so you don't have to waste cash on a static ip for no good reason
-  #provisioner "local-exec" {
-  #  command = "./common/update_hosts.sh personal.dev ${aws_eip.personal_site.public_ip}"
-  #}
+resource "aws_eip" "personal_site" {}
+resource "aws_eip_association" "personal_site" {
+  instance_id   = "${aws_instance.personal_site.id}"
+  allocation_id = "${aws_eip.personal_site.id}"
 }
+
+

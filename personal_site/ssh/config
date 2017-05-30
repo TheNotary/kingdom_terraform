@@ -1,0 +1,8 @@
+Host dokku
+HostName 127.0.0.1
+User dokku
+StrictHostKeyChecking no
+UserKnownHostsFile /dev/null
+#LogLevel QUIET
+IdentityFile ~/.ssh/default-dokku_rsa
+IdentitiesOnly=yes
