@@ -118,6 +118,11 @@ resource "aws_instance" "personal_site" {
     destination = "/home/admin/.ssh/default-dokku_rsa.pub"
   }
 
+  provisioner "file" {
+    source = "keys/default_authorized_keys"
+    destination = "/tmp/default_authorized_keys"
+  }
+
   # this allows terraform to run commands after the EC2 instance boots up
   provisioner "remote-exec" {
     inline = "mkdir /home/admin/scripts"
@@ -146,13 +151,15 @@ resource "aws_instance" "personal_site" {
   # Here's where we have terraform actually setup the box for us
   provisioner "remote-exec" {
     inline = [
+      "chmod 0755 /home/admin/scripts/change_hostname.sh",
       "chmod 0600 /home/admin/.ssh/*_rsa",
       "chmod 0755 /home/admin/scripts/provision.sh",
-      "chmod 0755 /home/admin/scripts/change_hostname.sh",
 
       "sudo bash -l /home/admin/scripts/change_hostname.sh ${var.personal_site_domain}",
       "bash -l /home/admin/scripts/provision.sh ${var.personal_site_domain}",
-      "bash /home/admin/scripts/deploy_rails_app.sh ${var.personal_site_domain} email-smtp.us-west-2.amazonaws.com ${aws_iam_user.eff_fab.id} ${aws_iam_access_key.eff_fab.ses_smtp_password} ${var.region} ${aws_iam_access_key.eff_fab.id} ${aws_iam_access_key.eff_fab.secret} ${aws_s3_bucket.eff_fab.id}"
+      "bash /home/admin/scripts/deploy_rails_app.sh ${var.personal_site_domain} email-smtp.us-west-2.amazonaws.com ${aws_iam_user.eff_fab.id} ${aws_iam_access_key.eff_fab.ses_smtp_password} ${var.region} ${aws_iam_access_key.eff_fab.id} ${aws_iam_access_key.eff_fab.secret} ${aws_s3_bucket.eff_fab.id}",
+      "cat /tmp/default_authorized_keys >> /home/admin/.ssh/authorized_keys",
+      "cat /tmp/default_authorized_keys | sudo tee -a /home/dokku/.ssh/authorized_keys"
     ]
   }
 
@@ -163,5 +170,3 @@ resource "aws_eip_association" "personal_site" {
   instance_id   = "${aws_instance.personal_site.id}"
   allocation_id = "${aws_eip.personal_site.id}"
 }
-
-

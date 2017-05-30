@@ -3,6 +3,7 @@
 
 init:
 	mkdir -p keys/ && \
+  echo "# put your ~/.ssh/id_rsa.pub keys in here for your team" >> keys/default_authorized_keys && \
   ssh-keygen -t RSA -b 4096 -N '' -f `pwd`/keys/personal-aws_rsa && \
   ssh-keygen -t RSA -b 4096 -N '' -f `pwd`/keys/default-dokku_rsa
 

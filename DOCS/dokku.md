@@ -66,5 +66,3 @@ dokku-personal postgres:link stock_chart_db stock_chart
 # Migrate your apps Database
 dokku-personal run stock_chart rake db:migrate
 ```
-
-

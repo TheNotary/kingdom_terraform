@@ -13,8 +13,28 @@ Before you can get started, you need to hop up to the cloud (aws.amazon.com) and
 # My personal AWS keys
 export HOBBY_AWS_ACCESS_KEY_ID='<insert from amazon>'
 export HOBBY_AWS_SECRET_ACCESS_KEY='<insert from amazon>'
+
+# If you don't own a domain name, don't worry, just set this env to any domain name and
+# use /etc/hosts to redirect this to your elastic IP (EIP) after it's created
+export TF_VAR_personal_site_domain='your-domain-name.com'
 ```
 
+###### Required SSH Configs
+
+To ssh into the resulting server, we'll need a `./ssh/config` that enables our admin access:
+```
+Host admin.your-domain-name.com
+HostName admin.your-domain-name.com
+User admin
+StrictHostKeyChecking no
+UserKnownHostsFile /dev/null
+LogLevel QUIET
+IdentityFile ~/dev/hobby/kingdom_terraform/keys/personal-aws_rsa
+IdentitiesOnly=yes
+```
+Alternatively, you can put any key's you'd like to have admin access to this box by placing them in `keys/authorized_keys`.  These keys will also have access to the dokku user of this machine.  If you go this route, obviously you'll need to adjust the `IdentityFile` directive to point to the appropriate key.
+
+###### Usage Commands
 There's a `Makefile` that provides various commands for working with this repo.
 
 ```
@@ -53,4 +73,4 @@ When you're all done here and have successfully created a personal_site server o
 - The starter project: http://grange74.github.io/blog/2015/05/20/terraform-hello-world-on-aws/
 - Variabls and how they are annoying:  https://www.terraform.io/intro/getting-started/variables.html
 - use `terraform import aws_instance.web i-12345678` to go in reverse, take configs from amazon and build at `.tf` file from them!?!
-
+- Mount an S3 bucket as a folder (hint: the keys/ folder and the .tfstate folder):  http://www.skybert.net/linux/mounting-amazon-s3-buckets-on-debian/

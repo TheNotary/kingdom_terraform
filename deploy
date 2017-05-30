@@ -8,6 +8,28 @@ tf_credential_string="-var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' -var 'secret_
 tf_state_file="-state=.tf_state/terraform_$1.tfstate"
 tf_environment="-var 'environment=$1' ${tf_state_file}"
 
+
+_init() {
+  mkdir -p keys/ &&
+    echo "# put your ~/.ssh/id_rsa.pub keys in here for your team" >> keys/default_authorized_keys &&
+    ssh-keygen -t RSA -b 4096 -N '' -f `pwd`/keys/personal-aws_rsa &&
+    ssh-keygen -t RSA -b 4096 -N '' -f `pwd`/keys/default-dokku_rsa
+}
+
+if [ ! -d "keys/" ]; then
+  echo "Could not fild the keys/ folder.  Would you like to have that file automatically populated?"
+  echo "(y)/n"
+  read -n choice
+  if [ "${choice}" == "y" ] || [ -z "${choice}" ]; then
+    _init
+  else
+    echo "Ok, please populate that folder through w/e means you're comfortable, be that either copy/ pasting from other folders, syncing from S3, or something else that's nice."
+    echo "exiting"
+    exit
+  fi
+fi
+
+
 # Validate number of args
 [ "$#" -lt "2" ] &&
   echo "Error:  Requires at least 2 arguments" &&
