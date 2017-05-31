@@ -2,6 +2,7 @@
 # we'll be pushing to our dokku service
 
 variable "environment" { default = "dev" }
+data "aws_caller_identity" "current" {}
 
 
 ############
@@ -74,26 +75,94 @@ resource "aws_s3_bucket" "eff_fab" {
   force_destroy = true # enables terraform deleting non-empty buckets
 }
 
+resource "aws_s3_bucket" "eff_fab_emails" {
+  bucket = "eff-fab-emails-${var.environment}"
+  acl    = "private"
+
+  tags {
+    Name        = "eff_fab"
+    Environment = "${var.environment}"
+  }
+
+  force_destroy = true # enables terraform deleting non-empty buckets
+}
+
+resource "aws_s3_bucket_policy" "eff_fab_emails_store" {
+  bucket = "${aws_s3_bucket.eff_fab_emails.id}"
+
+  policy = <<POLICY
+{
+	"Version": "2008-10-17",
+	"Statement": [
+		{
+			"Sid": "GiveSESPermissionToWriteEmail",
+			"Effect": "Allow",
+			"Principal": {
+				"Service": [
+					"ses.amazonaws.com"
+				]
+			},
+			"Action": [
+				"s3:PutObject"
+			],
+			"Resource": "${aws_s3_bucket.eff_fab_emails.arn}/*",
+			"Condition": {
+				"StringEquals": {
+					"aws:Referer": "${data.aws_caller_identity.current.account_id}"
+				}
+			}
+		}
+	]
+}
+POLICY
+}
+
 
 #############
 # SES Stuff #
 #############
 
 provider "aws" {
-  alias  = "mail"
-  region = "us-west-2"
+	alias  = "mail"
+	region = "us-west-2"
 }
 
-
 resource "aws_ses_domain_identity" "personal_site" {
-  provider = "aws.mail"
-  domain = "${var.personal_site_domain}"
+	provider = "aws.mail"
+	domain = "${var.environment_subdomain}${var.personal_site_domain}"
 }
 
 resource "aws_route53_record" "mail_verification_record" {
-  zone_id = "${var.route53_zone_id}"
-  name    = "_amazonses.${var.personal_site_domain}"
-  type    = "TXT"
-  ttl     = "5"
-  records = ["${aws_ses_domain_identity.personal_site.verification_token}"]
+	zone_id = "${var.route53_zone_id}"
+	name    = "_amazonses.${var.environment_subdomain}${var.personal_site_domain}"
+	type    = "TXT"
+	ttl     = "5"
+	records = ["${aws_ses_domain_identity.personal_site.verification_token}"]
 }
+
+# Add a header to the email and store it in S3
+resource "aws_ses_receipt_rule" "store" {
+	provider = "aws.mail"
+	name          = "store-${var.environment}"
+	rule_set_name = "${aws_ses_receipt_rule_set.default_rule_set.rule_set_name}"
+	recipients    = ["admin@${var.environment_subdomain}${var.personal_site_domain}"]
+	enabled       = true
+	scan_enabled  = true
+
+	#add_header_action {
+	#  header_name  = "Custom-Header"
+	#  header_value = "Added by SES"
+	#}
+
+	s3_action {
+		bucket_name = "${aws_s3_bucket.eff_fab_emails.id}"
+		position = 0
+	}
+}
+
+resource "aws_ses_receipt_rule_set" "default_rule_set" {
+  provider = "aws.mail"
+  rule_set_name = "default-rule-set-${var.environment}"
+}
+
+

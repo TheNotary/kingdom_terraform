@@ -10,6 +10,7 @@ variable "secret_key" {}
 variable "ubuntu_amis" {type = "map"}
 variable "ami" {}
 variable "personal_site_domain" {}
+variable "environment_subdomain" {}
 
 # Setup terraform to work with amazon aws with the appropriate user/ region combo
 provider "aws" "prod" {
@@ -21,7 +22,7 @@ provider "aws" "prod" {
 
 # Setup a key that can be used to ssh into EC2 instances
 resource "aws_key_pair" "personal_site" {
-  key_name   = "personal-aws_rsa"
+  key_name   = "personal-aws_rsa-${var.environment}"
   public_key = "${file(var.pub_key_path)}"
 }
 
@@ -155,8 +156,8 @@ resource "aws_instance" "personal_site" {
       "chmod 0600 /home/admin/.ssh/*_rsa",
       "chmod 0755 /home/admin/scripts/provision.sh",
 
-      "sudo bash -l /home/admin/scripts/change_hostname.sh ${var.personal_site_domain}",
-      "bash -l /home/admin/scripts/provision.sh ${var.personal_site_domain}",
+      "sudo bash -l /home/admin/scripts/change_hostname.sh ${var.environment_subdomain}${var.personal_site_domain}",
+      "bash -l /home/admin/scripts/provision.sh ${var.environment_subdomain}${var.personal_site_domain}",
       "bash /home/admin/scripts/deploy_rails_app.sh ${var.personal_site_domain} email-smtp.us-west-2.amazonaws.com ${aws_iam_user.eff_fab.id} ${aws_iam_access_key.eff_fab.ses_smtp_password} ${var.region} ${aws_iam_access_key.eff_fab.id} ${aws_iam_access_key.eff_fab.secret} ${aws_s3_bucket.eff_fab.id}",
       "cat /tmp/default_authorized_keys >> /home/admin/.ssh/authorized_keys",
       "cat /tmp/default_authorized_keys | sudo tee -a /home/dokku/.ssh/authorized_keys"

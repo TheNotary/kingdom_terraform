@@ -35,23 +35,20 @@ IdentitiesOnly=yes
 Alternatively, you can put any key's you'd like to have admin access to this box by placing them in `keys/authorized_keys`.  These keys will also have access to the dokku user of this machine.  If you go this route, obviously you'll need to adjust the `IdentityFile` directive to point to the appropriate key.
 
 ###### Usage Commands
-There's a `Makefile` that provides various commands for working with this repo.
+There's a `deploy` file that provides various commands for working with this repo.  It's basically a wrapper around terraform that allows you to specify what environment to run things against.  The first time you run deploy, it will prompt you that it can't find the `keys` folder and ask if you'd like to create the stuff needed to work with this demo.  Choose yes and let it works it's magic.
 
 ```
-# Run this command once to initialize all your keys for the first time.
-$ make init
-
 # Run this command to test the config file and see what terraform will do if
 # it's actually activiated.
-$ make plan
+$ ./deploy prd plan
 
 # Run this command to actually activate terraform and have it apply your
 # infrastructure to the cloud.
-$  make apply
+$  ./deploy prd apply
 
 # Run this command to destory all the infrastructure.  It's set to target just
 # the EC2 instance though.
-$ make destory
+$ ./deploy prd destory
 ```
 
 

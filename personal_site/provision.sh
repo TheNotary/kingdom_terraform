@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 box_hostname=$1
+
 echo "about to use this as hostname:  ${box_hostname}"
-echo "user name:  ${USER}"
 
 printf "Personal Site Server!\nIf you spot a vuln, please leave a note here :)\n" | sudo tee /etc/motd > /dev/null
 sudo apt-get update
@@ -60,6 +60,9 @@ sudo DOKKU_TAG=v0.9.4 bash bootstrap.sh
 
 # Install the mysql plugin for dokku
 sudo dokku plugin:install https://github.com/dokku/dokku-mysql.git mysql
+
+# Install lets encrypt plugin
+sudo dokku plugin:install https://github.com/dokku/dokku-letsencrypt.git
 
 
 ###############
