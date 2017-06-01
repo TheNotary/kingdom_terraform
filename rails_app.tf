@@ -152,10 +152,10 @@ resource "aws_route53_record" "mx" {
 
 
 # Add a header to the email and store it in S3
-resource "aws_ses_receipt_rule" "store" {
+resource "aws_ses_receipt_rule" "eff_fab" {
 	provider = "aws.mail"
 	name          = "store-${var.environment}"
-	rule_set_name = "${aws_ses_active_receipt_rule_set.default_rule_set.rule_set_name}"
+	rule_set_name = "${aws_ses_receipt_rule_set.default_rule_set.id}"
 	recipients    = ["admin@${var.environment_subdomain}${var.personal_site_domain}"]
 	enabled       = true
 	scan_enabled  = true
@@ -175,7 +175,7 @@ resource "aws_ses_receipt_rule_set" "default_rule_set" {
 # Are SES email rules going to be another one of those "keep it in a separate repo" issues?
 resource "aws_ses_active_receipt_rule_set" "default_rule_set" {
   provider = "aws.mail"
-  rule_set_name = "default-rule-set-${var.environment}"
+  rule_set_name = "${aws_ses_receipt_rule_set.default_rule_set.id}"
 }
 
 

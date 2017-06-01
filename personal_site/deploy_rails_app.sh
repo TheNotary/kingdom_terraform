@@ -28,14 +28,14 @@ mkdir dev && cd dev
 git clone https://github.com/TheNotary/eff_fab.git
 cd eff_fab
 
-app_name=eff_fab
+app_name=eff-fab
 
 git remote add dokku dokku:/${app_name}
 dokku apps:create ${app_name}
 dokku create ${app_name}
 
 # # Configure SSL
-# dokku config:set --no-restart ${app_name} DOKKU_LETSENCRYPT_EMAIL=your@email.tld
+# dokku config:set --no-restart ${app_name} DOKKU_LETSENCRYPT_EMAIL=admin@${the_hostname}
 # dokku letsencrypt ${app_name}
 
 # Setup Configs Required for App
