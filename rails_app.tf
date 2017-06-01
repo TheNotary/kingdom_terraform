@@ -140,19 +140,25 @@ resource "aws_route53_record" "mail_verification_record" {
 	records = ["${aws_ses_domain_identity.personal_site.verification_token}"]
 }
 
+resource "aws_route53_record" "mx" {
+	zone_id = "${var.route53_zone_id}"
+	name = "${var.environment_subdomain}${var.personal_site_domain}"
+	type = "MX"
+	ttl = "5"  # TODO: change to 300 or more someday
+	records = [
+    "10 inbound-smtp.us-west-2.amazonaws.com"
+  ]
+}
+
+
 # Add a header to the email and store it in S3
 resource "aws_ses_receipt_rule" "store" {
 	provider = "aws.mail"
 	name          = "store-${var.environment}"
-	rule_set_name = "${aws_ses_receipt_rule_set.default_rule_set.rule_set_name}"
+	rule_set_name = "${aws_ses_active_receipt_rule_set.default_rule_set.rule_set_name}"
 	recipients    = ["admin@${var.environment_subdomain}${var.personal_site_domain}"]
 	enabled       = true
 	scan_enabled  = true
-
-	#add_header_action {
-	#  header_name  = "Custom-Header"
-	#  header_value = "Added by SES"
-	#}
 
 	s3_action {
 		bucket_name = "${aws_s3_bucket.eff_fab_emails.id}"
@@ -164,5 +170,13 @@ resource "aws_ses_receipt_rule_set" "default_rule_set" {
   provider = "aws.mail"
   rule_set_name = "default-rule-set-${var.environment}"
 }
+
+# FIXME:  This could lead to problems with states across environments
+# Are SES email rules going to be another one of those "keep it in a separate repo" issues?
+resource "aws_ses_active_receipt_rule_set" "default_rule_set" {
+  provider = "aws.mail"
+  rule_set_name = "default-rule-set-${var.environment}"
+}
+
 
 

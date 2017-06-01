@@ -71,3 +71,4 @@ When you're all done here and have successfully created a personal_site server o
 - Variabls and how they are annoying:  https://www.terraform.io/intro/getting-started/variables.html
 - use `terraform import aws_instance.web i-12345678` to go in reverse, take configs from amazon and build at `.tf` file from them!?!
 - Mount an S3 bucket as a folder (hint: the keys/ folder and the .tfstate folder):  http://www.skybert.net/linux/mounting-amazon-s3-buckets-on-debian/
+- Mail https://www.chrisanthropic.com/sending-mail-ses-route53-dkim-spf-dmarc/
