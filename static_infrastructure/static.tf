@@ -16,6 +16,16 @@ resource "aws_route53_zone" "personal_site" {
   lifecycle { prevent_destroy = true }
 }
 
+resource "aws_iam_user" "personal_site" {
+  name = "personal_site_${var.environment}"
+  path = "/system/"
+}
+
+resource "aws_iam_access_key" "personal_site" {
+  user = "${aws_iam_user.personal_site.name}"
+}
+
+
 resource "aws_s3_bucket" "personal_site_data" {
   bucket = "personal-site-data-${var.environment}"
   acl    = "private"
@@ -23,6 +33,7 @@ resource "aws_s3_bucket" "personal_site_data" {
   tags {
     Name        = "personal_site"
     Environment = "${var.environment}"
+    key = "personal-site-data-${var.environment}"
   }
   lifecycle { prevent_destroy = true }
 }
