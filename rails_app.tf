@@ -163,7 +163,7 @@ resource "aws_ses_receipt_rule" "eff_fab" {
 	s3_action {
 		bucket_name = "${aws_s3_bucket.eff_fab_emails.id}"
     object_key_prefix = "admin/"
-		position = 0
+		position = 1
 	}
 }
 
