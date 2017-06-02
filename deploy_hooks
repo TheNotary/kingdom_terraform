@@ -1,0 +1,23 @@
+_init_keys() {
+  mkdir -p keys/ &&
+    echo "# put your ~/.ssh/id_rsa.pub keys in here for your team" >> keys/default_authorized_keys &&
+    ssh-keygen -t RSA -b 4096 -N '' -f `pwd`/keys/personal-aws_rsa &&
+    ssh-keygen -t RSA -b 4096 -N '' -f `pwd`/keys/default-dokku_rsa
+}
+
+
+_before_hook() {
+  if [ ! -d "keys/" ]; then
+    echo "Could not fild the keys/ folder.  Would you like to have that file automatically populated?"
+    echo "(y)/n"
+    read -n choice
+    if [ "${choice}" == "y" ] || [ -z "${choice}" ]; then
+      _init_keys
+    else
+      echo "Ok, please populate that folder through w/e means you're comfortable, be that either copy/ pasting from other folders, syncing from S3, or something else that's nice."
+      echo "exiting"
+      exit
+    fi
+  fi
+}
+
