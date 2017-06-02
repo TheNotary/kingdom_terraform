@@ -18,7 +18,7 @@ aws_id=$6
 aws_secret=$7
 aws_bucket=$8
 
-app_name=eff_fab
+app_name=eff-fab
 EOF
 
 
@@ -35,8 +35,15 @@ dokku apps:create ${app_name}
 dokku create ${app_name}
 
 # # Configure SSL
+# Check S3 for our app's certs and if they don't exist:
+
 # dokku config:set --no-restart ${app_name} DOKKU_LETSENCRYPT_EMAIL=admin@${the_hostname}
 # dokku letsencrypt ${app_name}
+
+# tarball the certs
+# Copy the certs to S3 for future respins
+
+
 
 # Setup Configs Required for App
 dokku config:set ${app_name} \
@@ -51,13 +58,17 @@ dokku config:set ${app_name} \
   MEMCACHIER_SERVERS="" \
   MEMCACHIER_USERNAME="" \
   MEMCACHIER_PASSWORD="" \
-  domain_name="${the_hostname}" \
+  domain_name="${app_name}.${the_hostname}" \
+  mail_from_domain="us-west-2.amazonses.com" \
   mail_server="${mail_server}" \
+  mail_fab_sender_address="admin@${the_hostname}" \
   mail_port="587" \
   mail_authentication="login" \
-  mail_enable_starttls_auto="true" \
   mail_user_name="${smtp_user}" \
   mail_password="${smtp_pass}" \
+  mail_link_protocol="http" \
+  mail_enable_starttls_auto="true" \
+  mail_delivery_method="smtp" \
   storage="s3" \
   amazon_access_key_id="${aws_id}" \
   amazon_secret_access_key="${aws_secret}" \

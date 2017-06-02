@@ -157,7 +157,7 @@ resource "aws_instance" "personal_site" {
 
       "sudo bash -l /home/admin/scripts/change_hostname.sh ${var.environment_subdomain}${var.personal_site_domain}",
       "bash -l /home/admin/scripts/provision.sh ${var.environment_subdomain}${var.personal_site_domain}",
-      "bash /home/admin/scripts/deploy_rails_app.sh ${var.personal_site_domain} email-smtp.us-west-2.amazonaws.com ${aws_iam_user.eff_fab.id} ${aws_iam_access_key.eff_fab.ses_smtp_password} ${var.region} ${aws_iam_access_key.eff_fab.id} ${aws_iam_access_key.eff_fab.secret} ${aws_s3_bucket.eff_fab.id}",
+      "bash /home/admin/scripts/deploy_rails_app.sh ${var.personal_site_domain} email-smtp.us-west-2.amazonaws.com ${aws_iam_access_key.eff_fab.id} ${aws_iam_access_key.eff_fab.ses_smtp_password} ${var.region} ${aws_iam_access_key.eff_fab.id} ${aws_iam_access_key.eff_fab.secret} ${aws_s3_bucket.eff_fab.id}",
       "cat /tmp/default_authorized_keys >> /home/admin/.ssh/authorized_keys",
       "cat /tmp/default_authorized_keys | sudo tee -a /home/dokku/.ssh/authorized_keys"
     ]

@@ -43,7 +43,7 @@ resource "aws_route53_record" "personal_site_a_admin" {
 # Dokku App
 resource "aws_route53_record" "personal_site_a_eff_fab" {
   type    = "A"
-  name    = "eff_fab.${var.environment_subdomain}${var.personal_site_domain}"
+  name    = "eff-fab.${var.environment_subdomain}${var.personal_site_domain}"
   records = ["${aws_eip.personal_site.public_ip}"]
   zone_id = "${var.route53_zone_id}"
   ttl     = "5"
