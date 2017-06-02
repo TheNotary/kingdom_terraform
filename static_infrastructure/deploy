@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+set -e
+
+# Construct a string that can be passed to terraform to allow
+# our aws credentials to be used
+if [ "$1" == "prd" ]; then
+  environment_subdomain=""
+else
+  environment_subdomain="${1}."
+fi
+
+tf_credential_string="-var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}'"
+tf_state_file="-state=.tf_state/terraform_$1.tfstate"
+tf_environment="-var 'environment=$1' -var 'environment_subdomain=${environment_subdomain}' ${tf_state_file}"
+
+# Run any custom before hooks defined in `./deploy_hooks`
+[ -e "deploy_hooks" ] && source deploy_hooks
+[ -n "$(type _before_hook 2>/dev/null)" ] && _before_hook
+
+# Validate number of args
+[ "$#" -lt "2" ] &&
+  echo "Error:  Requires at least 2 arguments" &&
+  echo "Usage:  $ deploy <dev|stg|prd> <plan|apply|destroy> [additional commands for terraform]" &&
+  exit
+
+# Validate target environment (dev, stg, or prd)
+( [ "$1" != "dev" ] && [ "$1" != "stg" ] && [ "$1" != "prd" ] ) &&
+  echo "Error: unknown environment specified '$1', please use dev, stg, or prd" &&
+  exit
+
+# This path works for most commands like destory, plan and apply
+cmd="terraform $2 ${tf_credential_string} ${tf_environment} ${@:3}"
+
+
+# if we're running a state command we can't use -var or terraform crashes hard
+[ "$2" == "state" ] &&
+  cmd="terraform $2 $3 ${tf_state_file} ${@:4}"
+
+
+# echo "${cmd}"
+eval "${cmd}"
+
+
+
+
+
+# TODO:  Can I create an option to do a zero-downtime re-spin of everything?
+
+
+
+# Install this to /etc/bash_completion.d/deploy to enable tab completion
+
+# _deploy()
+# {
+#   local cur prev opts
+#   COMPREPLY=()
+#   cur="${COMP_WORDS[COMP_CWORD]}"
+#   prev="${COMP_WORDS[COMP_CWORD-1]}"
+#   opts="--help --verbose --version"
+#
+#
+#   if [[ ${COMP_CWORD} == 1 ]] ; then
+#     COMPREPLY=( $(compgen -W "dev stg prd" -- ${cur}) )
+#     return 0
+#   fi
+#
+#   if [[ ${COMP_CWORD} == 2 ]] ; then
+#     COMPREPLY=( $(compgen -W "plan apply destroy state" -- ${cur}) )
+#     return 0
+#   fi
+# }
+# complete -F _deploy deploy
+

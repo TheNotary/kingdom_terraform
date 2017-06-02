@@ -7,7 +7,7 @@ variable "pub_key_path" {}
 variable "priv_key_path" {}
 variable "access_key" {}
 variable "secret_key" {}
-variable "ubuntu_amis" {type = "map"}
+variable "debian_amis" {type = "map"}
 variable "ami" {}
 variable "personal_site_domain" {}
 variable "environment_subdomain" {}
@@ -94,7 +94,7 @@ resource "aws_instance" "personal_site" {
     Description = "Handles the logic involved in my personal website."
   }
 
-  ami = "${lookup(var.ubuntu_amis, var.region)}"
+  ami = "${lookup(var.debian_amis, var.region)}"
   instance_type = "t2.micro"
   key_name = "${aws_key_pair.personal_site.id}"
 
