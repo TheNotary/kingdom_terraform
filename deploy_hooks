@@ -21,3 +21,19 @@ _before_hook() {
   fi
 }
 
+
+
+# Usage _expose_get_remote_attribute aws_route53_zone.personal_site
+_expose_get_remote_attribute() {
+  static_tf_state="-state=static_infrastructure/.tf_state/terraform_prd.tfstate"
+  grep_cmd="grep -P \"^id\W*=\""
+  awk_cmd="awk '{ print \$3 }'"
+
+  terraform_cmd="terraform state show ${static_tf_state} $1"
+  eval "${terraform_cmd} | ${grep_cmd} | ${awk_cmd}"
+}
+
+# Setup ENVs
+
+TF_VAR_route53_zone_id=$(_expose_get_remote_attribute aws_route53_zone.personal_site)
+

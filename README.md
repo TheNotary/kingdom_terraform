@@ -4,7 +4,7 @@ This repo allows me to spin up my tech on AWS without having to waste a bunch of
 
 ## Usage
 
-Before you can get started, you need to hop up to the cloud (aws.amazon.com) and create an iam user and give it permissions to do the things you want terraform to do (I just gave my Administrative Access so I don't need to update it again).
+Before you can get started, you need to hop up to the cloud (aws.amazon.com) and create an iam user and give it permissions to do the things you want terraform to do (I just gave my user Administrative Access so I don't need to update it again).
 
 ###### Required ENV Variables:
 
@@ -32,12 +32,18 @@ LogLevel QUIET
 IdentityFile ~/dev/hobby/kingdom_terraform/keys/personal-aws_rsa
 IdentitiesOnly=yes
 ```
-Alternatively, you can put any key's you'd like to have admin access to this box by placing them in `keys/authorized_keys`.  These keys will also have access to the dokku user of this machine.  If you go this route, obviously you'll need to adjust the `IdentityFile` directive to point to the appropriate key.
+Alternatively, if you have a list of key's that you'd like granted admin access for this server, place them in `keys/authorized_keys`.  These keys will also have access to the dokku user of this machine.  If you go this route, obviously you'll need to adjust the `IdentityFile` directive to point to the appropriate key.
 
 ###### Usage Commands
 There's a `deploy` file that provides various commands for working with this repo.  It's basically a wrapper around terraform that allows you to specify what environment to run things against.  The first time you run deploy, it will prompt you that it can't find the `keys` folder and ask if you'd like to create the stuff needed to work with this demo.  Choose yes and let it works it's magic.
 
 ```
+# First you need to create the static infrastructure that you don't want spun up and down along with your EC2 and app related infrastructure.
+# Think of this kind of infrastructure as the 'master' infrastructure that you'd like to be persistent (and backed up ideally)
+$ cd static_infrastructure
+$ ./deploy prd apply
+$ cd ..
+
 # Run this command to test the config file and see what terraform will do if
 # it's actually activiated.
 $ ./deploy prd plan
