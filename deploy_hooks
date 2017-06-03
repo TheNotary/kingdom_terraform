@@ -26,7 +26,7 @@ _before_hook() {
 # Usage _expose_get_remote_attribute aws_route53_zone.personal_site
 _expose_get_remote_attribute() {
   static_tf_state="-state=static_infrastructure/.tf_state/terraform_prd.tfstate"
-  grep_cmd="grep -P \"^id\W*=\""
+  grep_cmd="grep -P \"^$2\W*=\""
   awk_cmd="awk '{ print \$3 }'"
 
   terraform_cmd="terraform state show ${static_tf_state} $1"
@@ -35,5 +35,8 @@ _expose_get_remote_attribute() {
 
 # Setup ENVs
 
-TF_VAR_route53_zone_id=$(_expose_get_remote_attribute aws_route53_zone.personal_site)
-
+# This would look ok with a ruby hash...
+export TF_VAR_route53_zone_id=$(_expose_get_remote_attribute aws_route53_zone.personal_site id)
+export TF_VAR_personal_site_key_id=$(_expose_get_remote_attribute aws_iam_access_key.personal_site id)
+export TF_VAR_personal_site_key_secret=$(_expose_get_remote_attribute aws_iam_access_key.personal_site secret)
+export TF_VAR_personal_site_bucket=$(_expose_get_remote_attribute aws_s3_bucket.personal_site_data id)
