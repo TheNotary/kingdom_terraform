@@ -10,7 +10,7 @@ _before_hook() {
   if [ ! -d "keys/" ]; then
     echo "Could not fild the keys/ folder.  Would you like to have that file automatically populated?"
     echo "(y)/n"
-    read -n choice
+    read -n 1 choice
     if [ "${choice}" == "y" ] || [ -z "${choice}" ]; then
       _init_keys
     else
