@@ -12,9 +12,9 @@ sudo apt-get install -y vim fuse S3FS
 # Setup S3FS #
 ##############
 
+# Uses fuse and S3FS packages
 sudo ldconfig
 sudo modprobe fuse
-echo AWS_ACCESS_KEY_ID:AWS_SECRET_ACCESS_KEY > ~/.passwd-s3fs
 
 
 #################
@@ -72,10 +72,6 @@ sudo dokku plugin:install https://github.com/dokku/dokku-mysql.git mysql
 # Install lets encrypt plugin
 sudo dokku plugin:install https://github.com/dokku/dokku-letsencrypt.git
 
-
-#######################################
-# Install Pre-existing Certs for Apps #
-#######################################
 
 
 ###############

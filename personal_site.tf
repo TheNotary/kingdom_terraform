@@ -1,8 +1,7 @@
 # Change this to your desired region
-variable "region" {
-  default = "us-west-1"
-}
+variable "region" { default = "us-west-1" }
 
+# Local Variables
 variable "pub_key_path" {}
 variable "priv_key_path" {}
 variable "access_key" {}
@@ -11,6 +10,12 @@ variable "debian_amis" {type = "map"}
 variable "ami" {}
 variable "personal_site_domain" {}
 variable "environment_subdomain" {}
+
+# Remote Variables (look in deploy_hooks)
+variable "route53_zone_id" {}
+variable "personal_site_key_id" {}
+variable "personal_site_key_secret" {}
+variable "personal_site_bucket" {}
 
 # Setup terraform to work with amazon aws with the appropriate user/ region combo
 provider "aws" {
@@ -139,6 +144,16 @@ resource "aws_instance" "personal_site" {
   }
 
   provisioner "file" {
+    source = "personal_site/cert_restoration_helpers.sh"
+    destination = "/home/admin/scripts/cert_restoration_helpers.sh"
+  }
+
+  provisioner "file" {
+    source = "personal_site/connect_persistent_data_folder.sh"
+    destination = "/home/admin/scripts/connect_persistent_data_folder.sh"
+  }
+
+  provisioner "file" {
     source = "personal_site/provision.sh"
     destination = "/home/admin/scripts/provision.sh"
   }
@@ -151,12 +166,12 @@ resource "aws_instance" "personal_site" {
   # Here's where we have terraform actually setup the box for us
   provisioner "remote-exec" {
     inline = [
-      "chmod 0755 /home/admin/scripts/change_hostname.sh",
+      "chmod 0755 /home/admin/scripts/*",
       "chmod 0600 /home/admin/.ssh/*_rsa",
-      "chmod 0755 /home/admin/scripts/provision.sh",
 
       "sudo bash -l /home/admin/scripts/change_hostname.sh ${var.environment_subdomain}${var.personal_site_domain}",
       "bash -l /home/admin/scripts/provision.sh ${var.environment_subdomain}${var.personal_site_domain}",
+      "bash -l /home/admin/scripts/connect_persistent_data_folder.sh ${var.personal_site_key_id} ${var.personal_site_key_secret} ${var.personal_site_bucket} ${var.region}",
       "bash /home/admin/scripts/deploy_rails_app.sh ${var.personal_site_domain} email-smtp.us-west-2.amazonaws.com ${aws_iam_access_key.eff_fab.id} ${aws_iam_access_key.eff_fab.ses_smtp_password} ${var.region} ${aws_iam_access_key.eff_fab.id} ${aws_iam_access_key.eff_fab.secret} ${aws_s3_bucket.eff_fab.id}",
       "cat /tmp/default_authorized_keys >> /home/admin/.ssh/authorized_keys",
       "cat /tmp/default_authorized_keys | sudo tee -a /home/dokku/.ssh/authorized_keys"

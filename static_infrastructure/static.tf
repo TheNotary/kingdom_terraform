@@ -21,6 +21,29 @@ resource "aws_iam_user" "personal_site" {
   path = "/system/"
 }
 
+resource "aws_iam_user_policy" "personal_site_bucket_admin" {
+  name = "personal_site_bucket_admin_${var.environment}"
+  user = "${aws_iam_user.personal_site.name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_s3_bucket.personal_site_data.arn}",
+        "${aws_s3_bucket.personal_site_data.arn}/*"
+      ]
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_access_key" "personal_site" {
   user = "${aws_iam_user.personal_site.name}"
 }

@@ -1,6 +1,3 @@
-variable "route53_zone_id" {}
-
-
 # This resource is handled in another repository, so I can run an un-targeted destory and
 # Don't incur any downtime due to nameservers needing to be changed via my domain name
 # registrar for my personal site.  Note that instead of the variable "${var.route53_zone_id}"

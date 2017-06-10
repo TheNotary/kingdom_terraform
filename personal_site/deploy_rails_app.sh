@@ -7,7 +7,9 @@ aws_region=$5
 aws_id=$6
 aws_secret=$7
 aws_bucket=$8
+app_name=eff-fab
 
+# For debugging
 cat >/home/admin/scripts/deploy_params << EOF
 the_hostname=$1
 mail_server=$2
@@ -21,28 +23,18 @@ aws_bucket=$8
 app_name=eff-fab
 EOF
 
+# Dependencies
+source /home/admin/scripts/cert_restoration_helpers.sh
 
+
+# Clone app to be deployed and prepare for deployment
 cd /home/admin
 mkdir dev && cd dev
-
 git clone https://github.com/TheNotary/eff_fab.git
 cd eff_fab
 
-app_name=eff-fab
-
 git remote add dokku dokku:/${app_name}
 dokku apps:create ${app_name}
-dokku create ${app_name}
-
-# # Configure SSL
-# Check S3 for our app's certs and if they don't exist:
-
-# dokku config:set --no-restart ${app_name} DOKKU_LETSENCRYPT_EMAIL=admin@${the_hostname}
-# dokku letsencrypt ${app_name}
-
-# tarball the certs
-# Copy the certs to S3 for future respins
-
 
 
 # Setup Configs Required for App
@@ -87,5 +79,14 @@ git push dokku develop:master ||
   git push dokku develop:master # It works the second time, but not the first... can't seem to read the ENV variables during the assets:precompile phase...
 dokku checks:enable ${app_name}
 
-dokku run ${app_name} rake db:migrate user:populate_users || true # the 'or true' allows this task to fail, without interupting the spin up of the EC2 instance.
 
+# Configure TLS
+_restoreCert ${app_name}
+dokku config:set --no-restart ${app_name} DOKKU_LETSENCRYPT_EMAIL=admin@${the_hostname}
+dokku letsencrypt ${app_name}
+_backupCert
+
+
+# Complete the application deployment
+#dokku config:set ${app_name} force_ssl="true"
+dokku run ${app_name} rake db:migrate user:populate_users || true # the 'or true' allows this task to fail, without interupting the spin up of the EC2 instance.
