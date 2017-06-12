@@ -4,8 +4,7 @@ variable "region" { default = "us-west-1" }
 # Local Variables
 variable "pub_key_path" {}
 variable "priv_key_path" {}
-variable "access_key" {}
-variable "secret_key" {}
+variable "aws_profile" {}
 variable "debian_amis" {type = "map"}
 variable "ami" {}
 variable "personal_site_domain" {}
@@ -20,8 +19,7 @@ variable "personal_site_bucket" {}
 
 # Setup terraform to work with amazon aws with the appropriate user/ region combo
 provider "aws" {
-  access_key = "${var.access_key}"
-  secret_key = "${var.secret_key}"
+  profile = "${var.aws_profile}"
   region = "${var.region}"
 }
 

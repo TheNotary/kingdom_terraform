@@ -4,22 +4,29 @@ This repo allows you to spin up some services in AWS without having to waste a b
 
 ## Usage
 
-Before you can get started, you need to hop up to the cloud (aws.amazon.com) and create an iam user and give it permissions to do the things you want terraform to do (I just gave my user Administrative Access so I don't need to update it again).
+Before you can get started, you need to hop up to the cloud (aws.amazon.com) and create an iam user and give it permissions to do the things you want terraform to do (I just gave my user Administrative Access so I don't need to update it again).  Once you have your credentials generated, put them into your `~/.aws/credentials` config file as displayed below:
+
+(~/.aws/credentials)
+```
+[default]
+aws_secret_access_key = <Inserter from aws.amazon.com>
+aws_access_key_id = <Inserter from aws.amazon.com>
+```
 
 
 ###### Required ENV Variables:
 
-You need these environment variables loaded into your environment before you can apply these `.tf` files with terraform.
+You need these environment variables loaded into your environment before you can apply this repo's `.tf` files with terraform.
 
 (.bashrc or w/e loads when your console loads)
 ```
-# My personal AWS keys
-export HOBBY_AWS_ACCESS_KEY_ID='<insert from amazon>'
-export HOBBY_AWS_SECRET_ACCESS_KEY='<insert from amazon>'
-
 # If you don't own a domain name, don't worry, just set this env to any domain name and
 # use /etc/hosts to redirect this to your elastic IP (EIP) after it's created
 export TF_VAR_personal_site_domain='your-domain-name.com'
+
+# (optional) If you have multiple profiles in your ~/.aws/credentials file, specify which
+# you'd like to use here.  If nothing is supplied, default will be used.
+export TF_VAR_aws_profile="default"
 ```
 
 
