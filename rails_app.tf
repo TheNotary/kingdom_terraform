@@ -64,7 +64,7 @@ EOF
 }
 
 resource "aws_s3_bucket" "eff_fab" {
-  bucket = "eff-fab-${var.environment}"
+  bucket = "eff-fab-${var.user}-${var.environment}"
   acl    = "private"
 
   tags {
@@ -76,7 +76,7 @@ resource "aws_s3_bucket" "eff_fab" {
 }
 
 resource "aws_s3_bucket" "eff_fab_emails" {
-  bucket = "eff-fab-emails-${var.environment}"
+  bucket = "eff-fab-emails-${var.user}-${var.environment}"
   acl    = "private"
 
   tags {

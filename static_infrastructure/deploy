@@ -11,7 +11,7 @@ fi
 
 tf_credential_string="-var 'access_key=${HOBBY_AWS_ACCESS_KEY_ID}' -var 'secret_key=${HOBBY_AWS_SECRET_ACCESS_KEY}'"
 tf_state_file="-state=.tf_state/terraform_$1.tfstate"
-tf_environment="-var 'environment=$1' -var 'environment_subdomain=${environment_subdomain}' ${tf_state_file}"
+tf_environment="-var 'environment=$1' -var 'environment_subdomain=${environment_subdomain}' -var 'user=${USER}' ${tf_state_file}"
 
 # Run any custom before hooks defined in `./deploy_hooks`
 [ -e "deploy_hooks" ] && source deploy_hooks

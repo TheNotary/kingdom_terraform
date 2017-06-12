@@ -10,6 +10,7 @@ variable "debian_amis" {type = "map"}
 variable "ami" {}
 variable "personal_site_domain" {}
 variable "environment_subdomain" {}
+variable "user" {}
 
 # Remote Variables (look in deploy_hooks)
 variable "route53_zone_id" {}
@@ -26,7 +27,7 @@ provider "aws" {
 
 # Setup a key that can be used to ssh into EC2 instances
 resource "aws_key_pair" "personal_site" {
-  key_name   = "personal-aws_rsa-${var.environment}"
+  key_name   = "personal-aws_rsa-${var.user}-${var.environment}"
   public_key = "${file(var.pub_key_path)}"
 }
 
@@ -95,7 +96,7 @@ resource "aws_security_group" "wide_open" {
 # Spins up an actual EC2 Instance, it's terraform id is 'personal_site'
 resource "aws_instance" "personal_site" {
   tags = {
-    Name = "personal_site" # set's the label in aws console
+    Name = "personal-site-${var.user}" # set's the label in aws console
     Description = "Handles the logic involved in my personal website."
   }
 

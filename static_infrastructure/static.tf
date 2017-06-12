@@ -3,6 +3,8 @@ variable "personal_site_domain" { }
 variable "access_key" {}
 variable "secret_key" {}
 variable "environment" {}
+variable "user" {}
+
 
 # Setup terraform to work with amazon aws with the appropriate user/ region combo
 provider "aws" {
@@ -50,7 +52,7 @@ resource "aws_iam_access_key" "personal_site" {
 
 
 resource "aws_s3_bucket" "personal_site_data" {
-  bucket = "personal-site-data-${var.environment}"
+  bucket = "personal-site-data-${var.user}-${var.environment}"
   acl    = "private"
 
   tags {
