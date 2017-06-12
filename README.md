@@ -1,12 +1,15 @@
 # Kingdom Terraform
-This repo allows me to spin up my tech on AWS without having to waste a bunch of time mucking about in the aws.amazon.com online UI thing.
+This repo allows you to spin up some services in AWS without having to waste a bunch of time mucking about in the aws.amazon.com online UI thing.
 
 
 ## Usage
 
 Before you can get started, you need to hop up to the cloud (aws.amazon.com) and create an iam user and give it permissions to do the things you want terraform to do (I just gave my user Administrative Access so I don't need to update it again).
 
+
 ###### Required ENV Variables:
+
+You need these environment variables loaded into your environment before you can apply these `.tf` files with terraform.
 
 (.bashrc or w/e loads when your console loads)
 ```
@@ -18,6 +21,7 @@ export HOBBY_AWS_SECRET_ACCESS_KEY='<insert from amazon>'
 # use /etc/hosts to redirect this to your elastic IP (EIP) after it's created
 export TF_VAR_personal_site_domain='your-domain-name.com'
 ```
+
 
 ###### Required SSH Configs
 
@@ -34,16 +38,25 @@ IdentitiesOnly=yes
 ```
 Alternatively, if you have a list of key's that you'd like granted admin access for this server, place them in `keys/authorized_keys`.  These keys will also have access to the dokku user of this machine.  If you go this route, obviously you'll need to adjust the `IdentityFile` directive to point to the appropriate key.
 
-###### Usage Commands
-There's a `deploy` file that provides various commands for working with this repo.  It's basically a wrapper around terraform that allows you to specify what environment to run things against.  The first time you run deploy, it will prompt you that it can't find the `keys` folder and ask if you'd like to create the stuff needed to work with this demo.  Choose yes and let it works it's magic.
 
+###### Deploying the Super Infrastructure
+
+This repo's purpose is to show you everything required to hoist an application into the cloud.  One of the great things about IaC is that you can periodically blow away all of your servers and start again from scratch, ensuring that any compormized systems on your network will not be able to harbor malware after the vulnerability is closed via software upgrades.  But many cloud projects will require persistent things, such as persistent nameservers to be online... if you were to bring nameservers down by destroying your aws_route53_zone for instnace, you would then need to updating your domain registrar's records to poing domain queries to the new nameservers.  So for that kind of persistent stuff we're calling `super-infrastructure`, you'll control that from within the `static_infrastructure/` folder.
+
+To create your static infrastructure:
 ```
-# First you need to create the static infrastructure that you don't want spun up and down along with your EC2 and app related infrastructure.
-# Think of this kind of infrastructure as the 'master' infrastructure that you'd like to be persistent (and backed up ideally)
-$ cd static_infrastructure
+$ cd static_infrastructure/
 $ ./deploy prd apply
 $ cd ..
+```
 
+Great, if that command works, you'll now be able to create the ordinary infrastructure in the root folder of this repo.  The deploy script is discussed in greater detail below.
+
+
+###### Usage Commands
+For every set of `.tf` files in this project, there's a `deploy` script that provides various commands for working with terraform.  It's basically a wrapper around terraform that allows you to specify what environment to run things against and what operation to perform.  The first time you run deploy, it will prompt you that it can't find the `keys` folder and ask if you'd like to create the stuff needed to work with this demo.  Choose yes and let it work it's magic.
+
+```
 # Run this command to test the config file and see what terraform will do if
 # it's actually activiated.
 $ ./deploy prd plan
