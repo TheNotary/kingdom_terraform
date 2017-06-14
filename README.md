@@ -1,6 +1,8 @@
 # Kingdom Terraform
 This repo allows you to spin up some services in AWS without having to waste a bunch of time mucking about in the aws.amazon.com online UI thing.
 
+NOTE:  Due to circumstances beyond my control, this project has grown more complex and requires a light understanding and usage of the packer repo [kingdom_packer](../kingdom_packer).  You see... to create the EC2 instance (the VM) for this repo, you need a starting point image, an Amazon Machine Image (ami).  Originally we were able to use the debian provided ami, but alas, we now have a packer repo that creates a new ami for consumption by this terraform repo.
+
 
 ## Usage
 
@@ -37,6 +39,7 @@ To ssh into the resulting server, we'll need a `./ssh/config` that enables our a
 Host admin.your-domain-name.com
 HostName admin.your-domain-name.com
 User admin
+Port 53
 StrictHostKeyChecking no
 UserKnownHostsFile /dev/null
 LogLevel QUIET

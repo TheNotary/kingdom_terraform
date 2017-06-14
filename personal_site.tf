@@ -5,8 +5,6 @@ variable "region" { default = "us-west-1" }
 variable "pub_key_path" {}
 variable "priv_key_path" {}
 variable "aws_profile" {}
-variable "debian_amis" {type = "map"}
-variable "ami" {}
 variable "personal_site_domain" {}
 variable "environment_subdomain" {}
 variable "user" {}
@@ -38,6 +36,15 @@ resource "aws_security_group" "wide_open" {
   ingress = {
     from_port = 22
     to_port = 22
+    protocol = "tcp"
+    cidr_blocks = [ "0.0.0.0/0" ]
+    self = false
+  }
+
+  # UHG COMPLIANT SSH
+  ingress = {
+    from_port = 53
+    to_port = 53
     protocol = "tcp"
     cidr_blocks = [ "0.0.0.0/0" ]
     self = false
@@ -91,6 +98,17 @@ resource "aws_security_group" "wide_open" {
 }
 
 
+data "aws_ami" "debian_processed" {
+  owners       = ["self"]
+  most_recent  = true
+
+  filter {
+    name   = "name"
+    values = ["kingdom--*"]
+  }
+}
+
+
 # Spins up an actual EC2 Instance, it's terraform id is 'personal_site'
 resource "aws_instance" "personal_site" {
   tags = {
@@ -98,7 +116,7 @@ resource "aws_instance" "personal_site" {
     Description = "Handles the logic involved in my personal website."
   }
 
-  ami = "${lookup(var.debian_amis, var.region)}"
+  ami = "${data.aws_ami.debian_processed.image_id}"
   instance_type = "t2.micro"
   key_name = "${aws_key_pair.personal_site.id}"
 

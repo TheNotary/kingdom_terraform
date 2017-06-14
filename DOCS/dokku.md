@@ -29,6 +29,7 @@ You'll need this ssh_config entry so you can network with the dokku shell correc
 Host dokku.personal.dev
 HostName personal.dev
 User admin
+Port 53
 #below is somewhat unsecure, but that's life
 StrictHostKeyChecking no
 UserKnownHostsFile /dev/null
